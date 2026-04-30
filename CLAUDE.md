@@ -28,6 +28,7 @@
 - 타입 힌트 필수
 - 클래스나 함수에 간단 설명 docstring을 한글로 작성
 - 로그&로깅에는 `logging` 사용, `print()` 사용 금지
+- 불필요한 `---` 사용 자제
 
 ## 커밋 규칙
 - Conventional Commits 형식 사용: `feat(scope): 설명`
