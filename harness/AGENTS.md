@@ -7,9 +7,9 @@
 
 | 에이전트 | 파일 | 역할 | 결과물 |
 |---------|------|------|--------|
-| Planner | @agents/planner.md | 사용자 요청 분석 & 기술 설계 | SPEC.md |
-| Generator | @agents/generator.md | SPEC 기반 구현 | src/, tests/ |
-| Evaluator | @agents/evaluator.md | 코드 리뷰 & 테스트 실행 & 판정 | QA_REPORT.md |
+| Planner | @harness/agents/planner.md | 사용자 요청 분석 & 기술 설계 | SPEC.md |
+| Generator | @harness/agents/generator.md | SPEC 기반 구현 | src/, tests/ |
+| Evaluator | @harness/agents/evaluator.md | 코드 리뷰 & 테스트 실행 & 판정 | QA_REPORT.md |
 
 ## 핵심 원칙
 
