@@ -38,6 +38,6 @@
 
 ## 주의사항
 
-- harness/docs/evaluation_criteria.md를 읽고, 기능 정확성·코드 품질 기준을 설계에 반영하라
+- `harness/docs/evaluation_criteria.md`를 읽고, 기능 정확성·코드 품질 기준을 설계에 반영하라
 - 각 기능의 검증 기준이 나중에 테스트 케이스가 된다
 - 명확한 입/출력 계약(contract)이 없는 기능은 설계가 완성되지 않은 것이다
