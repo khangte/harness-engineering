@@ -20,8 +20,8 @@ my-service/
 │   └── docs/
 │       ├── harness_workflow.md        ← 워크플로우 실행 흐름
 │       ├── evaluation_criteria.md     ← 공용 평가 기준
-│       └── exec-plans/                ← 태스크별 산출물 저장
-│           └── <type>-<task-name>/
+│       └── exec_plans/                ← 태스크별 산출물 저장
+│           └── <type>_<task_name>/
 │               ├── SPEC.md
 │               ├── SELF_CHECK.md      ← 중대형 태스크(기능 6개 이상)만 생성
 │               └── QA_REPORT.md
@@ -43,7 +43,7 @@ Claude Code가 `CLAUDE.md`를 읽고 오케스트레이터 역할을 합니다. 
 3. 합격이면 커밋합니다
 
 **중대형** (신규 모듈·파이프라인·다중 모듈 연동):
-1. Planner 서브에이전트가 `harness/docs/exec-plans/<type>-<task-name>/SPEC.md`를 생성합니다
+1. Planner 서브에이전트가 `harness/docs/exec_plans/<type>_<task_name>/SPEC.md`를 생성합니다
 2. Generator 서브에이전트가 `src/`, `tests/`에 코드를 구현합니다
 3. Evaluator 서브에이전트가 ruff·mypy·pytest를 실행하고 QA_REPORT.md를 생성합니다
 4. 불합격이면 Generator가 피드백을 반영하여 재작업합니다 (최대 2회)
