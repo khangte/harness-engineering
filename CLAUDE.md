@@ -12,7 +12,7 @@
 
 - **기능 개발, 버그 수정, 리팩터링 등 src/ 코드를 변경하는 모든 작업에 적용된다.**
 - 코드 작업 전 태스크 규모를 먼저 판단한다: **소규모**(버그 수정·유틸 추가·단일 모듈 수정) vs **중대형**(신규 모듈·파이프라인·다중 모듈 연동).
-- **중대형만**: Planner를 호출하여 `harness/docs/exec_plans/<type>_<task_name>/SPEC.md`를 생성한다. 호출 시 사용자 요청과 핵심 의도(방향·완료 기준)를 함께 전달한다.
+- **중대형만**: Planner를 호출하여 `docs/exec_plans/<type>_<task_name>/SPEC.md`를 생성한다. 호출 시 사용자 요청과 핵심 의도(방향·완료 기준)를 함께 전달한다.
 - 테스트 통과 및 Evaluator 합격 후 커밋한다. 상세 절차는 `harness/docs/harness_workflow.md` 참고.
 
 ## 절약 규칙
