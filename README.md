@@ -20,11 +20,13 @@ my-service/
 │   └── docs/
 │       ├── harness_workflow.md        ← 워크플로우 실행 흐름
 │       ├── evaluation_criteria.md     ← 공용 평가 기준
-│       └── exec_plans/                ← 태스크별 산출물 저장
-│           └── <type>_<task_name>/
-│               ├── SPEC.md
-│               ├── SELF_CHECK.md      ← 중대형 태스크(기능 6개 이상)만 생성
-│               └── QA_REPORT.md
+│       ├── report_template.md         ← 결과 보고 템플릿
+├── docs/
+│   └── exec_plans/                    ← 태스크별 산출물 저장
+│       └── <type>_<task_name>/
+│           ├── SPEC.md
+│           ├── SELF_CHECK.md          ← 중대형 태스크(기능 6개 이상)만 생성
+│           └── QA_REPORT.md
 ├── src/                               ← Generator가 생성하는 구현 코드
 └── tests/                             ← Generator가 생성하는 테스트 코드
 ```
