@@ -19,8 +19,7 @@ my-service/
 │   │   └── evaluator.md               ← Evaluator 서브에이전트 지시서
 │   └── docs/
 │       ├── harness_workflow.md        ← 워크플로우 실행 흐름
-│       ├── evaluation_criteria.md     ← 공용 평가 기준
-│       ├── report_template.md         ← 결과 보고 템플릿
+│       └── evaluation_criteria.md     ← 공용 평가 기준
 ├── docs/
 │   └── exec_plans/                    ← 태스크별 산출물 저장
 │       └── <type>_<task_name>/
@@ -48,7 +47,7 @@ Claude Code가 `CLAUDE.md`를 읽고 오케스트레이터 역할을 합니다. 
 1. Planner 서브에이전트가 `docs/exec_plans/<type>_<task_name>/SPEC.md`를 생성합니다
 2. Generator 서브에이전트가 `src/`, `tests/`에 코드를 구현합니다
 3. Evaluator 서브에이전트가 ruff·mypy·pytest를 실행하고 QA_REPORT.md를 생성합니다
-4. 불합격이면 Generator가 피드백을 반영하여 재작업합니다 (최대 2회)
+4. 불합격이면 Generator가 피드백에 명시된 파일만 읽고 수정합니다 (최대 2회, 방향 전환 시에만 `src/` 전체 재설계)
 5. 합격이면 커밋합니다
 
 각 에이전트는 독립된 컨텍스트에서 실행되어 서로의 판단에 영향을 주지 않습니다.
@@ -74,7 +73,7 @@ claude
 ### 3단계: 프롬프트 한 줄을 입력합니다
 
 ```
-CSV 파일을 읽어 통계를 계산하는 데이터 파이프라인을 만들어줘
+사용자 인증 JWT 발급·검증 모듈을 만들어줘
 ```
 
 ### 4단계: 결과를 확인합니다
@@ -98,7 +97,7 @@ python -m pytest tests/ -v
 mkdir solo-test && cd solo-test
 claude
 
-> CSV 파일을 읽어 통계를 계산하는 데이터 파이프라인을 만들어줘
+> 사용자 인증 JWT 발급·검증 모듈을 만들어줘
 ```
 
 하네스 결과와 나란히 비교하면 차이가 명확히 보입니다.
