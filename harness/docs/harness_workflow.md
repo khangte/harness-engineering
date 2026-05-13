@@ -2,6 +2,8 @@
 
 해당 워크플로우는 선택이 아니라 **필수**다.
 
+3-Agent 하네스 구조(Planner → Generator → Evaluator)
+
 ## 태스크 규모 판단 (2-tier)
 
 워크플로우 진입 전, 오케스트레이터가 아래 기준으로 태스크 규모를 먼저 판단한다.
@@ -64,7 +66,6 @@ Planner 서브에이전트가 `SPEC.md`를 생성하면 다음 단계로 진행�
 최초 실행 시 (소규모):
 ```
 `harness/agents/generator.md` 파일을 읽고, 그 지시를 따라라.
-`harness/docs/evaluation_criteria.md` 파일도 읽고 참고하라.
 
 사용자 요청: [사용자가 준 프롬프트]
 
@@ -77,11 +78,11 @@ SELF_CHECK.md는 작성하지 않아도 된다.
 `harness/agents/generator.md` 파일을 읽고, 그 지시를 따라라.
 `harness/docs/evaluation_criteria.md` 파일도 읽고 참고하라.
 `docs/exec_plans/<type>_<task_name>/SPEC.md` 파일을 읽어라. (소규모는 생략)
-`src/` 디렉토리의 코드를 읽어라. 이것이 현재 코드다.
 `docs/exec_plans/<type>_<task_name>/QA_REPORT.md` 파일을 읽어라. 이것이 QA 피드백이다.
+QA 피드백의 "구체적 개선 지시"에 명시된 파일만 읽어라. 이것이 현재 코드다.
 
 QA 피드백의 "구체적 개선 지시"를 모두 반영하여 코드를 수정하라.
-"방향 판단"이 "완전히 다른 접근 시도"이면 아키텍처 자체를 재설계하라.
+"방향 판단"이 "완전히 다른 접근 시도"이면 아키텍처 자체를 재설계하라. 이 경우에만 `src/` 전체를 읽어라.
 중대형 태스크이고 기능이 6개 이상이면 완료 후 SELF_CHECK.md를 업데이트하라.
 ```
 
@@ -94,6 +95,7 @@ QA 피드백의 "구체적 개선 지시"를 모두 반영하여 코드를 수�
 `harness/docs/evaluation_criteria.md` 파일을 읽어라. 이것이 채점 기준이다.
 `docs/exec_plans/<type>_<task_name>/SPEC.md` 파일을 읽어라. 이것이 설계서다. (소규모는 생략)
 `src/` 디렉토리의 코드를 읽어라. 이것이 검수 대상이다.
+검수 후 개선 지시 작성 시, 반드시 파일명과 함수명을 명시하라 (예: `src/foo.py:process()`). 다음 Generator가 해당 파일만 읽고 수정할 수 있도록 최대한 구체적으로 작성하라.
 
 검수 절차:
 1. `src/` 코드를 분석하라
@@ -124,4 +126,20 @@ QA 피드백의 "구체적 개선 지시"를 모두 반영하여 코드를 수�
 
 1. `python -m pytest tests/ -v` 가 통과하는지 최종 확인한다.
 2. 변경 사항을 커밋한다 (Conventional Commits: `<type>(scope): 설명`).
-3. `harness/docs/report_template.md` 형태로 사용자에게 완료 보고.
+3. 사용자에게 완료 보고. 아래 형식을 따른다.
+
+```
+## 하네스 실행 완료
+
+**결과물**: src/
+**Planner 설계 기능 수**: X개
+**QA 반복 횟수**: X회
+**최종 점수**: 기능 정확성 X/10, 코드 품질 X/10, 성능 X/10, 테스트 X/10 (가중 X.X/10)
+
+**실행 흐름**:
+1. Planner: [설계한 기능 한 줄 요약]
+2. Generator R1: [첫 구현 결과 한 줄]
+3. Evaluator R1: [판정 결과 + 핵심 피드백 한 줄]
+4. Generator R2: [수정 내용 한 줄] ← 해당 시만 포함
+5. Evaluator R2: [판정 결과] ← 해당 시만 포함
+```
