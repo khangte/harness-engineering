@@ -1,110 +1,69 @@
-# CLAUDE.md4
+# CLAUDE.md
 
 **Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
 
-## 1. Think Before Coding
 
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
+## 1. Harness Engineering Orchestrator Instructions
 
-Before implementing:
-- State your assumptions explicitly. If uncertain, ask.
-- If multiple interpretations exist, present them - don't pick silently.
-- If a simpler approach exists, say so. Push back when warranted.
-- If something is unclear, stop. Name what's confusing. Ask.
+Read:
+- `harness/AGENTS.md`
+- `harness/docs/harness_workflow.md`
 
-## 2. Simplicity First
+### 1.1. Task Scale Decision (mandatory before any src/ change)
 
-**Minimum code that solves the problem. Nothing speculative.**
+- Small(Bug fix, util addition, single-module edit): Generator → Evaluator → commit
+- Large(New module, pipeline design, multi-module change): Planner → Generator → Evaluator → commit
+  + Create `docs/exec_plans/<task>/SPEC.md` (large tasks only)
 
-- No features beyond what was asked.
-- No abstractions for single-use code.
-- No "flexibility" or "configurability" that wasn't requested.
-- No error handling for impossible scenarios.
-- If you write 200 lines and it could be 50, rewrite it.
+### 1.2. Invariants
+- Generator and Evaluator MUST be called as separate sub-agents (isolation is the point).
+- All `src/` changes MUST run inside a worktree — never edit the main worktree directly.
+- Agents communicate via files only — no direct invocation between agents.
+- Skip SPEC.md and SELF_CHECK.md for small tasks; pass the user request directly to Generator.
 
-Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
 
-## 3. Surgical Changes
+## 2. Project Rules
 
-**Touch only what you must. Clean up only your own mess.**
+### 2.1. Environment Variables
+- NEVER read or modify `.env`
+- Modify `.env.example` only
 
-When editing existing code:
-- Don't "improve" adjacent code, comments, or formatting.
-- Don't refactor things that aren't broken.
-- Match existing style, even if you'd do it differently.
-- If you notice unrelated dead code, mention it - don't delete it.
+### 2.2. Cleanup
+- Remove temporary and debug files before finishing
+- NEVER create: `temp_*`, `*_new`, `*_old`, `*_backup`
 
-When your changes create orphans:
-- Remove imports/variables/functions that YOUR changes made unused.
-- Don't remove pre-existing dead code unless asked.
+### 2.3. Execution
+- Local: **Always use `uv run python`** — never call `python3` or `python` directly
+- Docker: `pip + requirements.txt`
+- After modifying `alembic/` migration files, a full image rebuild is required before re-applying:
+  ```bash
+  docker compose down -v
+  docker compose build --no-cache api
+  docker compose up -d postgres redis
+  docker compose run --rm api alembic upgrade head
+  ```
 
-The test: Every changed line should trace directly to the user's request.
+### 2.4. Code
+- Use type hints
+- Use `logging`, never `print()`
+- Add Korean docstrings to Python functions and classes
+- Never use Chinese characters: write "분석", not "분析" or "分析"
 
-## 4. Goal-Driven Execution
+### 2.5. Commits
+- Commit only after tests pass
+- Keep commits atomic
+- Write commit messages in Korean
 
-**Define success criteria. Loop until verified.**
+### 2.6. Naming
+- Use `snake_case` for files, folders, and functions
+- Use `PascalCase` for classes
+- Wrap file paths in backticks
 
-Transform tasks into verifiable goals:
-- "Add validation" → "Write tests for invalid inputs, then make them pass"
-- "Fix the bug" → "Write a test that reproduces it, then make it pass"
-- "Refactor X" → "Ensure tests pass before and after"
+### 2.7. Efficiency
+- Do not reread files already read
+- Run tool calls in parallel when possible
+- Do not repeat user-provided information
 
-For multi-step tasks, state a brief plan:
-```
-1. [Step] → verify: [check]
-2. [Step] → verify: [check]
-3. [Step] → verify: [check]
-```
-
-Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
-
----
-
-## 하네스 엔지니어링 오케스트레이터 지시서
-
-3-Agent 하네스 구조(Planner → Generator → Evaluator)
-백엔드/데이터 처리 프로젝트를 설계·구현·검수한다
-
-에이전트 목록은 `harness/AGENTS.md` 를 참고하라.
-`harness/docs/harness_workflow.md`의 실행 흐름을 **필수**로 진행한다.
-
-### 코드 작업 전 필수 절차
-
-- **기능 개발, 버그 수정, 리팩터링 등 src/ 코드를 변경하는 모든 작업에 적용된다.**
-- 코드 작업 전 태스크 규모를 먼저 판단한다: **소규모**(버그 수정·유틸 추가·단일 모듈 수정) vs **중대형**(신규 모듈·파이프라인·다중 모듈 연동)
-- **중대형만**: Planner를 호출하여 `docs/exec_plans/<type>_<task_name>/SPEC.md`를 생성한다. 호출 시 사용자 요청과 핵심 의도(방향·완료 기준)를 함께 전달
-- 테스트 통과 및 Evaluator 합격 후 커밋
-
----
-
-## 절약 규칙
-- **이미 읽은 파일은 다시 확인하지 않는다.**
-- 가능한 도구 호출은 동시에 실행한다.
-- 20줄 이상의 불필요한 출력은 서브에이전트에 위임한다.
-- **사용자가 이미 설명한 내용을 다시 반복하지 않는다.**
-
-## 네이밍 규칙
-- 파일명·폴더명은 모두 snake_case 사용
-- 함수명: snake_case / 클래스명: PascalCase
-- 파일 경로는 항상 백틱으로 감싸라: `harness/agents/planner.md`                        
-- LLM 지시문에서는 "파일을 읽어라" 동사와 함께 작성
-
-## 코드 규칙
-- 한 함수는 하나의 역할만 수행
-- 타입 힌트 필수
-- 클래스나 함수에 간단 설명 docstring을 한글로 작성
-- 로그&로깅에는 `logging` 사용, `print()` 사용 금지
-- 불필요한 `---` 사용 자제
-
-## 커밋 규칙
-- Conventional Commits 형식 사용: `feat(scope): 설명`
-  + 타입: `feat`, `fix`, `refactor`, `docs`, `test`, `chore` 등
-- scope는 변경 대상 모듈명 사용: `feat(planner): 기능 추가`
-- 한 커밋에 하나의 변경만 (atomic commit)
-  + 변경 내용이 다르면 파일별로 작성
-- 커밋 메시지는 한국어로 일관되게 작성
-
-## 정리 규칙
-- 임시 파일은 작업 완료 즉시 삭제
-- `temp_`, `_new`, `_old`, `_backup` 이름의 파일을 만들지 않는다
-- 작업 중 생성한 디버그용 코드는 PR 전에 삭제
+### 2.8. Code Search
+- Use Serena plugin first
+- Use bash `grep` only as a fallback
