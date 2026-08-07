@@ -72,7 +72,8 @@ Read:
 - Run tool calls in parallel when possible
 - Do not repeat user-provided information
 
-### 2.8. Code Search
+### 2.8. Code Search & File Reading
 
-- Use Serena plugin first
-- Use bash `grep` only as a fallback
+- Code search: Serena plugin first, bash `grep` as fallback
+- File reading: `cat` is allowed. `~/.claude/hooks/read-cost-hint.sh` suggests a cheaper
+  alternative (Serena `find_symbol` / `Read(offset, limit)`) based on the target file — follow it
