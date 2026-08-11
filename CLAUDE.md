@@ -52,7 +52,6 @@ Read:
 - Use `logging`, never `print()`
 - Add Korean docstrings to Python functions and classes
 - Never use Chinese characters: write "분석" (U+BD84 U+C11D), not "분析" (U+BD84 U+6790) or "分析"
-- After modifying code, if there is a diff, run `/ponytail-review` before committing.
 
 ### 2.5. Commits
 
@@ -72,8 +71,7 @@ Read:
 - Run tool calls in parallel when possible
 - Do not repeat user-provided information
 
-### 2.8. Code Search & File Reading
+### 2.8. Code Search
 
-- Code search: Serena plugin first, bash `grep` as fallback
-- File reading: `cat` is allowed. `~/.claude/hooks/read-cost-hint.sh` suggests a cheaper
-  alternative (Serena `find_symbol` / `Read(offset, limit)`) based on the target file — follow it
+- Use **Serena** plugin first
+- Use bash `grep` only as a fallback
